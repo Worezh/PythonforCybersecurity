@@ -7,7 +7,10 @@
 # Then walk through as an example of "debugging"
 
 userName = input("What is your name? ")
-print(f"Hello {userName}!\n")
+print(f"Hello {userName}!")
+print("Hello " + userName + "!")
+print("Hello {0}!".format(userName))
+print("Hello", userName, "\b!\n")
 print("Today is going to be a great day!\n")
 
 userAge = int(input("What is your age? "))
