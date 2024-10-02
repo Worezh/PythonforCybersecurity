@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # example workign with Loops
-# By Sak 9/30
+# By Sak 10/02
 
 user_input = input("Is today a good day? (y/n) ")
 user_input = user_input.lower()
-print()
 
 if user_input == "y":
   for i in range(10):
