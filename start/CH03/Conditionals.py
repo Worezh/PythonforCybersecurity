@@ -9,6 +9,6 @@ print()
 if user_input == "y":
   print("Yeah, it is a good day!")
 elif user_input == "n":
-  print("No, sadly, today is not a good day...")
+  print("No, today is not a good day...")
 else:
-  print("I don't understand your input. Please enter 'y' or 'n'.")
+  print("Invalid Input. Please enter 'y' or 'n'.")
