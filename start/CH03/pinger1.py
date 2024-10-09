@@ -4,20 +4,25 @@
 
 import os
 import platform
+
+# Function for pinging IP address
+def pingIpAddress(osName, ipAddress):
+  # Build ping command based on OS
+  if currentOS == "windows":
+    command = f"ping -n 1 -w 1000 {ipAddress} > NUL" # Windows
+  else:
+    command = f"ping -c 1 -w 1000 {ipAddress} > /dev/null 2>&1" # Linux
+  # Run ping command and get exit code
+  res = os.system(command)
+  return res
+
 # Get current OS
 currentOS = platform.system().lower()
 
 for otect4 in range(10):
   ipAddress = f"192.168.0." + str(otect4 + 1)
 
-  # Build ping command based on OS
-  if currentOS == "windows":
-    command = f"ping -n 1 -w 1000 {ipAddress} > NUL" # Windows
-  else:
-    command = f"ping -c 1 -w 1000 {ipAddress} > /dev/null 2>&1" # Linux
-
-  # Run ping command and get exit code
-  res = os.system(command)
+  res = pingIpAddress(currentOS, ipAddress)
   if res == 0:
     print(f"Ping to {ipAddress} Success")
   else:
