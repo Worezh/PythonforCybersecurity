@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # example workign with Loops
-# By Sak 10/02
+# By Sak
 
 def askUserLoopWithReturn(userInput):
   output = ""

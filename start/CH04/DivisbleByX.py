@@ -2,7 +2,7 @@
 # Checking if a number is divisble by X
 # By Sak
 
-# function to ask for a number and divisor and return if number is divisble by divisor
+# User Input Function
 def askUserInput():
   number = input("Enter a number: ")
   divisor = input("Enter the divisor: ")
@@ -10,6 +10,7 @@ def askUserInput():
   divisor = int(divisor)
   return number, divisor
 
+# Divisibility Function
 def isDivisible(number, divisor):
   if number % divisor == 0:
     return True
@@ -18,9 +19,9 @@ def isDivisible(number, divisor):
   
 number, divisor = askUserInput()
 if isDivisible(number, divisor):
-  print(f"{number} is divisible by {divisor}")
+  print(f"\n== {number} is divisible by {divisor} ==\n")
 else:
-  print(f"{number} is NOT divisible by {divisor}")
+  print(f"\n== {number} is NOT divisible by {divisor} ==\n")
   
 # def main():
 #   number, divisor = askUserInput()

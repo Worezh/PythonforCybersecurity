@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # example workign with conditionals
-# By Sak 10/02
+# By Sak
 
 def askUserWithReturn(userInput):
   output = None
