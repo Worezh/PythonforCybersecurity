@@ -12,7 +12,7 @@ def askUserWithReturn(userInput):
     output = "Invalid Input. Please enter 'y' or 'n'."
   return output
 
-def askUserWithPrint(userInput):
+def send_message(userInput):
   if userInput == "y":
     print("Yeah, it is a good day!")
   elif userInput == "n":
@@ -24,5 +24,5 @@ userInput = input("Is today a good day? (y/n) ")
 userInput = userInput.lower()
 print()
 
-askUserWithPrint(userInput)
+send_message(userInput)
 # print(askUserWithReturn(userInput))

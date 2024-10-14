@@ -13,7 +13,7 @@ def askUserLoopWithReturn(userInput):
     output += "Invalid Input. Please enter 'y' or 'n'.\n"
   return output
 
-def askUserLoopWithPrint(userInput):
+def send_message(userInput):
   if userInput == "y":
     for i in range(10):
       print(f"{i+1}: Yes, it is a good day!")
@@ -26,5 +26,5 @@ userInput = input("Is today a good day? (y/n) ")
 userInput = userInput.lower()
 print()
 
-askUserLoopWithPrint(userInput)
+send_message(userInput)
 # print(askUserLoopWithReturn(userInput))
