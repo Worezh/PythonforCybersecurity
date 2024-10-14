@@ -14,7 +14,7 @@ for letter in initial_message:
   # Convert letter to number
   ascii_num = ord(letter)
 
-  # Check if the character is a letter
+  # Check if the character is a lower case letter
   if ascii_num >= 97 and ascii_num <= 122:
     # Add 13 to number
     ascii_num = ascii_num + 13
