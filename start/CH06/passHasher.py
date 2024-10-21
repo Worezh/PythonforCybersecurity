@@ -29,6 +29,7 @@ def crack_passwords(shadow_entries, dictionary_passwords):
             if crypt.crypt(password, hashed_password) == hashed_password:
                 print(f"Match found: User - {user}, Password - {password}")
                 break
+        print(f"No match found: User - {user}")
 
 # Usage example
 script_path = os.path.realpath(__file__)
