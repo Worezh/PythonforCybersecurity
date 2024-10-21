@@ -7,42 +7,35 @@
 # Salt: G.DTW7g9s5U7KYf5
 # SHA-512 result: $6$G.DTW7g9s5U7KYf5$xTXAbS1Q30hfd10VDbkSh5adZMxbqRUMOyNyKopfFpMvD.Vf/CcoEBn/TUYcfJ1jAaEiJPBf/PoCLFq7U7Q7p.
 import crypt
+import os
 
-def testPass(hashedPass, salt, plaintextPass):
-    # Hash the plaintext password with the salt
-    hashedPlaintext = crypt.crypt(plaintextPass, salt)
+def read_dictionary_file(file_path):
+    with open(file_path, 'r') as file:
+        passwords = file.read().splitlines()
+    return passwords
 
-    # Compare the hashes
-    return hashedPlaintext == hashedPass
+def read_shadow_file(file_path):
+    with open(file_path, 'r') as file:
+        lines = file.read().splitlines()
+    shadow_entries = {}
+    for line in lines:
+        user, hashed_password = line.split(':')[:2]
+        shadow_entries[user] = hashed_password
+    return shadow_entries
 
-def main():
-    # Prompt for hashed password from /etc/shadow
-    hashedPass = "$6$G.DTW7g9s5U7KYf5$xTXAbS1Q30hfd10VDbkSh5adZMxbqRUMOyNyKopfFpMvD.Vf/CcoEBn/TUYcfJ1jAaEiJPBf/PoCLFq7U7Q7p."
+def crack_passwords(shadow_entries, dictionary_passwords):
+    for user, hashed_password in shadow_entries.items():
+        for password in dictionary_passwords:
+            if crypt.crypt(password, hashed_password) == hashed_password:
+                print(f"Match found: User - {user}, Password - {password}")
+                break
 
-    # Prompt for the SALT to use
-    salt = input("Enter the SALT to use (e.g., $6$ruzSF91zH9x9MeX6): ")
+# Usage example
+script_path = os.path.realpath(__file__)
+script_dir = os.path.dirname(script_path)
+shadowFile = os.path.join(script_dir, "shadow")
+passwordFile = os.path.join(script_dir, "top1000.txt")
 
-    # Prompt for the file containing plaintext passwords
-    passwordFile = "start/ch06/top1000.txt"
-
-    # Open the password file
-    try:
-        with open(passwordFile, "r") as file:
-            # Read each password from the file
-            for line in file:
-                # Strip the newline character
-                plaintextPass = line.strip()
-
-                # Try the password
-                if testPass(hashedPass, salt, plaintextPass):
-                    # If the password matches, print the result and quit
-                    print(f"Password found: {plaintextPass}")
-                    return
-    except FileNotFoundError:
-        print(f"File not found: {passwordFile}")
-
-    # If no match is found, print a message
-    print("No match found.")
-
-if __name__ == "__main__":
-    main()
+dictionary_passwords = read_dictionary_file(passwordFile)
+shadow_entries = read_shadow_file(shadowFile)
+crack_passwords(shadow_entries, dictionary_passwords)
