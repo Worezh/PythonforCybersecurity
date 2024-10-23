@@ -37,7 +37,7 @@ def get_file_path(file_name):
 
 # Main
 shadowFile = get_file_path("shadow")
-passwordFile = get_file_path("top10.txt")
+passwordFile = get_file_path("top1000.txt")
 dictionary_passwords = read_dictionary_file(passwordFile)
 shadow_entries = read_shadow_file(shadowFile)
 crack_passwords(shadow_entries, dictionary_passwords)
