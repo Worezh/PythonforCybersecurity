@@ -22,11 +22,14 @@ def read_shadow_file(file_path):
 
 def crack_passwords(shadow_entries, dictionary_passwords):
     for user, hashed_password in shadow_entries.items():
+        match_found = False
         for password in dictionary_passwords:
             if crypt.crypt(password, hashed_password) == hashed_password:
                 print(f"Match found: User - {user}, Password - {password}")
+                match_found = True
                 break
-        print(f"No match found: User - {user}")
+        if not match_found:
+            print(f"No match found: User - {user}")
 
 # Get current file directory
 def get_file_path(file_name):
