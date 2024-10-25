@@ -69,7 +69,7 @@ def welcome():
   print("   - Lower case letters (a-z)")
   print("   - Upper case letters (A-Z)")
   print("3. Choose to exclude similar characters (o, 0, i, I, l, L, 1, | etc.)")
-  print("4. Choose to exclude ambigious characters ({, }, [ ], (, ), /, \, ', \" etc.)")
+  print("4. Choose to exclude ambigious characters ({, }, [ ], (, ), /, \\, ', \" etc.)")
   print("5. Choose to start the first character with a letter")
   print("6. Choose to generate multiple passwords")
   print("------------------------------------------\n")
