@@ -9,7 +9,7 @@ def generate_password(length, symbols, numbers, lower, upper, exclude_similar, e
   similar_chars = "oO0iIlL1|!"
   ambiguous_chars = "{}[]()/\'\"!,;:>."
 
-  # Check if any character option is selected
+  # Add selected option to full character set for generating password
   if symbols:
     full_char += string.punctuation
   if numbers:
@@ -35,28 +35,16 @@ def generate_password(length, symbols, numbers, lower, upper, exclude_similar, e
       letters = "".join(set(letters) - set(similar_chars))
     # Generate first character letter of the password
     first_char = random.choice(letters)
-    # Generate the rest of the password minus 1 character
+    # Generate the rest of the password minus 1 character for combining
     password = "".join(random.choices(full_char, k=length - 1))
     # Return the combine password
     return first_char + password
   else:
     return "".join(random.choices(full_char, k=length))
 
+# Get user input
 def bool_input(prompt):
     return input(prompt).strip().lower() == 'y'
-
-def ask_user():
-  length = int(input("Length of password: "))
-  symbols = bool_input("Include symbols? (y/n): ")
-  numbers = bool_input("Include numbers? (y/n): ")
-  lower = bool_input("Include lower case letters? (y/n): ")
-  upper = bool_input("Include upper case letters? (y/n): ")
-  exclude_similar = bool_input("Exclude similar characters? (y/n): ")
-  exclude_ambiguous = bool_input("Exclude ambiguous characters? (y/n): ")
-  start_with_letter = bool_input("Start with a letter? (y/n): ")
-  multi_password = int(input("Amount of passwords to generate: "))
-
-  return length, symbols, numbers, lower, upper, exclude_similar, exclude_ambiguous, start_with_letter, multi_password
 
 def welcome():
   print("Welcome to the Random Password Generator!")
@@ -77,33 +65,55 @@ def welcome():
 def goodbye():
   print("Goodbye! See you next time!")
 
+# \033[91m to makes the text red
+# \033[0m to resets the color after the text
+def red_text(text):
+  return "\033[91m" + text + "\033[0m"
 
+# \033[92m to makes the text green
+def green_text(text):
+  return "\033[92m" + text + "\033[0m"
+
+# \033[94m to makes the text blue
+def blue_text(text):
+  return "\033[94m" + text + "\033[0m"
+
+welcome()
 while True:
-  welcome()
-  length, symbols, numbers, lower, upper, exclude_similar, exclude_ambiguous, start_with_letter, multi_password = ask_user()
-
+  # Validate the length is between 4 and 300
+  length = int(input("1. Length of password: "))
   if length < 4 or length > 300:
-    print("Password length must be between 4 and 300")
+    print(red_text("\nPassword length must be between 4 and 300. Please try again.\n"))
     continue
-  
+
+  # check if any character option is selected
+  symbols = bool_input("2. Include symbols? (y/n): ")
+  numbers = bool_input("2. Include numbers? (y/n): ")
+  lower = bool_input("2. Include lower case letters? (y/n): ")
+  upper = bool_input("2. Include upper case letters? (y/n): ")
   if not (symbols or numbers or lower or upper):
-    print("You must select at least one character option")
+    print(red_text("\nYou must select at least one character option. Please try again.\n"))
     continue
+
+  # Ask for the rest of the options
+  exclude_similar = bool_input("3. Exclude similar characters? (y/n): ")
+  exclude_ambiguous = bool_input("4. Exclude ambiguous characters? (y/n): ")
+  start_with_letter = bool_input("5. Start with a letter? (y/n): ")
+  multi_password = int(input("6. Amount of passwords to generate: "))
   
   for i in range(multi_password):
     pass_result = generate_password(length, symbols, numbers, lower, upper, exclude_similar, exclude_ambiguous, start_with_letter)
     colored_pass = ""
     for char in pass_result:
       if char.isalpha():
-        colored_pass += "\033[91m" + char + "\033[0m"
+        colored_pass += red_text(char)
       elif char.isdigit():
-        colored_pass += "\033[94m" + char + "\033[0m"
+        colored_pass += green_text(char)
       else:
-        colored_pass += "\033[92m" + char + "\033[0m"
+        colored_pass += blue_text(char)
     print(f"{i+1}: {colored_pass}")
 
   cont = input("\nWould you like to generate more passwords? (y/n): ")
   if cont.lower() != 'y':
-    goodbye()
     break
-
+goodbye()
