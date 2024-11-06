@@ -14,11 +14,12 @@ def print_dad_joke(dad_joke_response):
   print(dad_joke_response.joke)
 
 def get_dad_joke():
+  success_code = 200
   url = "https://icanhazdadjoke.com/"
   headers = {"Accept": "application/json"}
   response = requests.get(url, headers=headers)
 
-  if response.status_code == 200:
+  if response.status_code == success_code:
     data = response.json()
     dad_joke_response = DadJokeResponse(data)
     return dad_joke_response

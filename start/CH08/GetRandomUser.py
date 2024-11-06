@@ -7,64 +7,79 @@ import requests
 from datetime import datetime 
 from UserResponse import UserResponse
 
-def get_random_user():
-  url = "https://randomuser.me/api/"
+def get_random_user(user_count):
+  url = f"https://randomuser.me/api/?results={user_count}"
   response = requests.get(url)
   data = response.json()
-  user_data = UserResponse(data['results'][0])
-  return user_data
+  users = []
+  for user in data['results']:
+    users.append(UserResponse(user))
+  # users = UserResponse(data['results'])
+  return users
 
-def get_gender(user_data):
-  output = user_data.gender.capitalize()
+def get_gender(user):
+  output = user.gender.capitalize()
   return output
 
-def get_title(user_data):
-  output = user_data.name.title
+def get_name_title(user):
+  name = user.name
+  full_name = f"{name.first} {name.last}"
+  title = name.title
+  return full_name, title
+
+def get_address(user):
+  location = user.location
+  street = location.street
+  output = f"St. {street.number} {street.name}, {location.city}, {location.state} {location.country}, {location.postcode}"
   return output
 
-def get_full_name(user_data):
-  output = f"{user_data.name.first} {user_data.name.last}"
+def get_credentials(user):
+  username = user.login.username
+  password = user.login.password
+  return username, password
+
+def get_email(user):
+  output = user.email
   return output
 
-def get_address(user_data):
-  output = f"St. {user_data.location.street.number} {user_data.location.street.name}, {user_data.location.city}, {user_data.location.state} {user_data.location.country}, {user_data.location.postcode}"
-  return output
-
-def get_email(user_data):
-  output = user_data.email
-  return output
-
-def get_dob(user_data):
-  date_string = user_data.dob.date
+def get_dob_age(users):
+  date_string = users.dob.date
   date_object = datetime.strptime(date_string, "%Y-%m-%dT%H:%M:%S.%fZ")
   month_name = date_object.strftime("%B")
-  output = f"{month_name} {date_object.day}, {date_object.year}"
-  return output
+  dob = f"{month_name} {date_object.day}, {date_object.year}"
+  age = user.dob.age
+  return dob, age
 
-def get_age(user_data):
-  output = user_data.dob.age
-  return output
+def get_cell_phone(users):
+  phone = users.phone
+  cell = users.cell
+  return phone, cell
 
-def get_phone(user_data):
-  output = user_data.phone
-  return output
+users = get_random_user(5)
+for user in users:
+  full_name, title = get_name_title(user)
+  gender = get_gender(user)
+  address = get_address(user)
+  email = get_email(user)
+  dob, age = get_dob_age(user)
+  username, password = get_credentials(user)
+  phone, cell = get_cell_phone(user)
 
-def get_cell(user_data):
-  output = user_data.cell
-  return output
-
-user_data = get_random_user()
-print("-----------------------------------")
-print(f"Title/Prefix: {get_title(user_data)}.")
-print(f"Full Name: {get_full_name(user_data)}")
-print(f"Gender: {get_gender(user_data)}")
-print("-----------------------------------")
-print(f"Address: {get_address(user_data)}")
-print(f"Email: {get_email(user_data)}")
-print("-----------------------------------")
-print(f"DOB: {get_dob(user_data)}")
-print(f"Age: {get_age(user_data)}")
-print("-----------------------------------")
-print(f"Phone: {get_phone(user_data)}")
-print(f"Cell: {get_cell(user_data)}")
-print("-----------------------------------")
+  print(f"\n\033[92mUser {users.index(user) + 1}\033[0m")
+  print("-----------------------------------")
+  print(f"Title/Prefix: {title}.")
+  print(f"Full Name: {full_name}")
+  print(f"Gender: {gender}")
+  print("-----------------------------------")
+  print(f"Address: {address}")
+  print(f"Email: {email}")
+  print("-----------------------------------")
+  print(f"Username: {username}")
+  print(f"Password: {password}")
+  print("-----------------------------------")
+  print(f"DOB: {dob}")
+  print(f"Age: {age}")
+  print("-----------------------------------")
+  print(f"Phone: {phone}")
+  print(f"Cell: {cell}")
+  print("-----------------------------------")

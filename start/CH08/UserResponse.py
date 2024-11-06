@@ -4,6 +4,7 @@ class UserResponse:
     self.name = Name(data['name'])
     self.location = Location(data['location'])
     self.email = data['email']
+    self.login = Login(data['login'])
     self.dob = DOB(data['dob'])
     self.phone = data['phone']
     self.cell = data['cell']
@@ -26,6 +27,11 @@ class Street:
   def __init__(self, data):
     self.number = data['number']
     self.name = data['name']
+
+class Login:
+  def __init__(self, data):
+    self.username = data['username']
+    self.password = data['password']
 
 class DOB:
   def __init__(self, data):
