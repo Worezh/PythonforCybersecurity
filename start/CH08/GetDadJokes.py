@@ -27,7 +27,10 @@ def get_dad_joke():
     return None
 
 dad_joke_response = get_dad_joke()
-print_dad_joke(dad_joke_response)
+if dad_joke_response:
+  print_dad_joke(dad_joke_response)
+else:
+  print("Failed to retrieve dad joke")
 
 # if dad_joke_response:
 #   print(dad_joke_response.id)
