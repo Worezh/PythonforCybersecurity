@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-# script that generates a random password
+# script that generates a random password and checks it against haveibeenpwned.com
 # By Sak
 
 import random
 import string
+import requests
+import hashlib
 
 def generate_password(length, symbols, numbers, lower, upper, exclude_similar, exclude_ambiguous, start_with_letter):
   full_char = ""
@@ -42,6 +44,35 @@ def generate_password(length, symbols, numbers, lower, upper, exclude_similar, e
     return first_char + password
   else:
     return "".join(random.choices(full_char, k=length))
+  
+# Get SHA-1 hash of password
+def sha1_hash(password):
+  sha1 = hashlib.sha1()
+  sha1.update(password.encode('utf-8'))
+  return sha1.hexdigest()
+
+# Get first 5 characters and remaining characters of SHA-1 hash
+def get_hash_parts(password):
+  pass_hash = sha1_hash(password).upper()
+  # Slice password hash at the 5th character
+  hash_start = pass_hash[:5]
+  hash_end = pass_hash[5:]
+  return hash_start, hash_end
+
+def check_pwned_password(first_five):
+  url = f"https://api.pwnedpasswords.com/range/{first_five}"
+  response = requests.get(url)
+  
+  # Split the response into a list of lines
+  pass_list = response.text.splitlines()
+  # Split result on : and make it into a dictionary
+  pass_dict = {}
+  for pass_item in pass_list:
+    pass_piece = pass_item.split(":")
+    # Add password and count to dictionary
+    pass_dict[pass_piece[0]] = pass_piece[1]
+
+  return pass_dict
 
 # Get user input
 def bool_input(prompt):
@@ -66,22 +97,13 @@ def welcome():
 def goodbye():
   print("Goodbye! See you next time!")
 
-# \033[91m to makes the text red
-# \033[0m to resets the color after the text
 def red_text(text):
   return "\033[91m" + text + "\033[0m"
-
-# \033[92m to makes the text green
-def green_text(text):
-  return "\033[92m" + text + "\033[0m"
-
-# \033[94m to makes the text blue
-def blue_text(text):
-  return "\033[94m" + text + "\033[0m"
 
 def main():
   welcome()
   while True:
+    pass_list = []
     # Validate the length is between 4 and 300
     length = int(input("1. Length of password: "))
     if length < 4 or length > 300:
@@ -102,24 +124,25 @@ def main():
     exclude_ambiguous = bool_input("4. Exclude ambiguous characters? (y/n): ")
     start_with_letter = bool_input("5. Start with a letter? (y/n): ")
     multi_password = int(input("6. Amount of passwords to generate: "))
+    print("------------------------------------------")
     
-    for i in range(multi_password):
+    for _ in range(multi_password):
       pass_result = generate_password(length, symbols, numbers, lower, upper, exclude_similar, exclude_ambiguous, start_with_letter)
-      colored_pass = ""
-      for char in pass_result:
-        if char.isalpha():
-          colored_pass += red_text(char)
-        elif char.isdigit():
-          colored_pass += green_text(char)
-        else:
-          colored_pass += blue_text(char)
-      print(f"{i+1}: {colored_pass}")
+      pass_list.append(pass_result)
+
+    for password in pass_list:
+      hash_start, hash_end = get_hash_parts(password)
+      response = check_pwned_password(hash_start)
+      if hash_end in response:
+        print(f"\"{password}\" was found {response[hash_end]} times")
+      else:
+        print(f"\"{password}\" is a secure password!")
+    print("------------------------------------------")
 
     cont = input("\nWould you like to generate more passwords? (y/n): ")
     if cont.lower() != 'y':
       break
   goodbye()
-
 
 if __name__ == "__main__":
   main()

@@ -6,10 +6,19 @@
 import requests
 import hashlib
 
+# Get SHA-1 hash of password
 def sha1_hash(password):
   sha1 = hashlib.sha1()
   sha1.update(password.encode('utf-8'))
   return sha1.hexdigest()
+
+# Get first 5 characters and remaining characters of SHA-1 hash
+def get_hash_parts(password):
+  pass_hash = sha1_hash(password).upper()
+  # Slice password hash at the 5th character
+  hash_start = pass_hash[:5]
+  hash_end = pass_hash[5:]
+  return hash_start, hash_end
 
 def check_pwned_password(first_five):
   url = f"https://api.pwnedpasswords.com/range/{first_five}"
@@ -28,22 +37,18 @@ def check_pwned_password(first_five):
 
   return pass_dict
 
-# Get SHA-1 hash of password
-def get_hash_parts(password):
-  pass_hash = sha1_hash(password).upper()
-  # Slice password hash at the 5th character
-  hash_start = pass_hash[:5]
-  hash_end = pass_hash[5:]
-  return hash_start, hash_end
+def main():
+  user_pass = input("What password do you want to test? ")
+  hash_start, hash_end = get_hash_parts(user_pass)
 
-user_pass = input("What password do you want to test? ")
-hash_start, hash_end = get_hash_parts(user_pass)
+  # Call API with SHA-1 hash first 5 characters
+  response = check_pwned_password(hash_start)
 
-# Call API with SHA-1 hash first 5 characters
-response = check_pwned_password(hash_start)
+  # Check if hash is in the dictionary
+  if hash_end in response:
+    print(f"{user_pass} was found {response[hash_end]} times")
+  else:
+    print(f"{user_pass} was not found")
 
-# Check if hash is in the dictionary
-if hash_end in response:
-  print(f"{user_pass} was found {response[hash_end]} times")
-else:
-  print(f"{user_pass} was not found")
+if __name__ == "__main__":
+  main()
